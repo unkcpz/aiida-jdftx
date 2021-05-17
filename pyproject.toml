@@ -1,0 +1,25 @@
+[tool.pylint.format]
+max-line-length = 125
+
+[tool.pylint.miscellaneous]
+notes = ['FIXME']
+
+[tool.pylint.messages_control]
+disable = [
+    "too-many-ancestors",
+    "too-many-arguments",
+    "too-many-locals",
+    "invalid-name",
+    "redefined-outer-name",
+    "import-outside-toplevel",
+    "attribute-defined-outside-init",
+]
+
+[tool.pytest.ini_options]
+python_files = "test_*.py example_*.py"
+filterwarnings = [
+    "ignore::DeprecationWarning:aiida:",
+    "ignore::DeprecationWarning:plumpy:",
+    "ignore::DeprecationWarning:django:",
+    "ignore::DeprecationWarning:yaml:",
+]

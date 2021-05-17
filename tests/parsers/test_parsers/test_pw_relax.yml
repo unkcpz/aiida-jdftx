@@ -1,0 +1,94 @@
+output_kpoints:
+  array|kpoints:
+  - 65
+  - 3
+  array|weights:
+  - 65
+  cell:
+  - - 0.000343677765536
+    - 5.175113149125589
+    - 5.175113149125589
+  - - 5.17511314912559
+    - 0.000343677765536
+    - 5.17511314912559
+  - - 5.175113149125587
+    - 5.175113149125587
+    - 0.000343677765536
+  pbc1: true
+  pbc2: true
+  pbc3: true
+output_parameters:
+  energy_ewald: -226.60322434330772
+  energy_ewald_units: eV
+  energy_hartree: 15.29720218830176
+  energy_hartree_units: eV
+  energy_kinetic: 83.11695392193592
+  energy_kinetic_units: eV
+  energy_local: -71.01037628324568
+  energy_local_units: eV
+  energy_nonlocal: 49.84914262124016
+  energy_nonlocal_units: eV
+  energy_total: -214.5127313284016
+  energy_total_units: eV
+  energy_xc: -65.16242943332605
+  energy_xc_units: eV
+output_structure:
+  cell:
+  - - 0.000343677765536
+    - 5.175113149125589
+    - 5.175113149125589
+  - - 5.17511314912559
+    - 0.000343677765536
+    - 5.17511314912559
+  - - 5.175113149125587
+    - 5.175113149125587
+    - 0.000343677765536
+  kinds:
+  - mass: 28.0855
+    name: Si
+    symbols:
+    - Si
+    weights:
+    - 1.0
+  pbc1: true
+  pbc2: true
+  pbc3: true
+  sites:
+  - kind_name: Si
+    position:
+    - 0.025003325501067
+    - 0.025003325501067
+    - 0.025003325501067
+  - kind_name: Si
+    position:
+    - 0.274996674498933
+    - 0.274996674498933
+    - 0.274996674498933
+output_trajectory:
+  array|cells:
+  - 11
+  - 3
+  - 3
+  array|energy_ewald:
+  - 11
+  array|energy_hartree:
+  - 11
+  array|energy_kinetic:
+  - 11
+  array|energy_local:
+  - 11
+  array|energy_nonlocal:
+  - 11
+  array|energy_total:
+  - 11
+  array|energy_xc:
+  - 11
+  array|positions:
+  - 11
+  - 2
+  - 3
+  array|steps:
+  - 11
+  symbols:
+  - Si
+  - Si

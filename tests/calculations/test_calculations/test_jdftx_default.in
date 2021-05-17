@@ -1,0 +1,21 @@
+lattice \ 
+      5.1306060590       5.1306060590       0.0000000000 \ 
+      5.1306060590       0.0000000000       5.1306060590 \ 
+      0.0000000000       5.1306060590       5.1306060590 \ 
+
+ion-species ./pseudo/Si.upf
+
+coords-type cartesian
+ion Si           0.0000000000       0.0000000000       0.0000000000 0
+ion Si           2.5653030295       2.5653030295       2.5653030295 0
+
+kpoint-folding 8 8 8
+kpoint  0.5  0.5  0.5  1.0
+
+elec-cutoff                    20 100
+lattice-minimize               \ 
+    nIterations                    0 \ 
+
+dump-name aiida.$VAR
+dump End ElecDensity Kpoints Ecomponents Lattice IonicPositions
+
