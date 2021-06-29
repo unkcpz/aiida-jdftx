@@ -1,89 +1,88 @@
-name: ci
+name: Continuous Integration
 
 on: [push, pull_request]
 
 jobs:
 
-  tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        python-version: [3.8]
-        backend: ['django']
+    pre-commit:
 
-    services:
-      postgres:
-        image: postgres:10
-        env:
-          POSTGRES_DB: test_${{ matrix.backend }}
-          POSTGRES_PASSWORD: ''
-          POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-      rabbitmq:
-        image: rabbitmq:latest
-        ports:
-          - 5672:5672
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+        steps:
+        -   uses: actions/checkout@v1
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+        -   name: Cache python dependencies
+            id: cache-pip
+            uses: actions/cache@v1
+            with:
+                path: ~/.cache/pip
+                key: pip-pre-commit-${{ hashFiles('**/setup.json') }}
+                restore-keys:
+                    pip-pre-commit-
 
-    - name: Install python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e .[testing]
-        reentry scan -r aiida
+        -   name: Set up Python
+            uses: actions/setup-python@v2
+            with:
+                python-version: 3.8
 
-    - name: Run test suite
-      env:
-        AIIDA_TEST_BACKEND: ${{ matrix.backend }}
-        # show timings of tests
-        PYTEST_ADDOPTS: "--durations=0"
-      run: py.test --cov aiida_jdftx --cov-append .
+        -   name: Install python dependencies
+            run:
+                pip install -e .[pre-commit,tests]
 
-  docs:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e .[docs]
-        reentry scan -r aiida
-    - name: Build docs
-      run: cd docs && make
+        -   name: Run pre-commit
+            run:
+                pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )
 
-  pre-commit:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e .[pre-commit,docs,testing]
-        reentry scan -r aiida
-    - name: Run pre-commit
-      run: |
-        pre-commit install
-        pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )
+    tests:
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                python-version: [3.7, 3.8, 3.9]
+
+        services:
+            postgres:
+                image: postgres:10
+                env:
+                    POSTGRES_DB: test_${{ matrix.backend }}
+                    POSTGRES_PASSWORD: ''
+                    POSTGRES_HOST_AUTH_METHOD: trust
+                ports:
+                -    5432:5432
+            rabbitmq:
+                image: rabbitmq:latest
+                ports:
+                -   5672:5672
+
+        steps:
+        -   uses: actions/checkout@v2
+
+        -   name: Cache python dependencies
+            id: cache-pip
+            uses: actions/cache@v1
+            with:
+                path: ~/.cache/pip
+                key: pip-${{ matrix.python-version }}-tests-${{ hashFiles('**/setup.json') }}
+                restore-keys:
+                    pip-${{ matrix.python-version }}-tests
+
+        -   name: Set up Python ${{ matrix.python-version }}
+            uses: actions/setup-python@v2
+            with:
+                python-version: ${{ matrix.python-version }}
+
+        -   name: Install system dependencies
+            run: |
+                sudo apt update
+                sudo apt install postgresql-12
+
+        -   name: Install python dependencies
+            run: |
+                pip install --upgrade setuptools
+                pip install -e .[tests]
+                reentry scan
+
+        -   name: Run pytest
+            run:
+                pytest -sv tests

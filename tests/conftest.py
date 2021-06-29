@@ -156,10 +156,14 @@ def generate_inputs_jdftx(fixture_code, generate_structure,
         from aiida_jdftx.utils import get_default_options
 
         inputs = {
-            'code': fixture_code('jdftx'),
-            'structure': generate_structure(),
-            'kpoints': generate_kpoints_mesh(8),
-            'parameters': Dict(dict={
+            'code':
+            fixture_code('jdftx'),
+            'structure':
+            generate_structure(),
+            'kpoints':
+            generate_kpoints_mesh(8),
+            'parameters':
+            Dict(dict={
                 'elec-cutoff': '20 100',
                 'lattice-minimize': {
                     'nIterations': 0,
@@ -299,10 +303,10 @@ def generate_parser():
 
     return _generate_parser
 
+
 @pytest.fixture
 def generate_workchain():
     """Fixture to generate an instance of a `WorkChain`."""
-
     def _generate_workchain(entry_point, inputs):
         """Generate an instance of a `WorkChain` with entry_point and inputs
 
@@ -322,11 +326,14 @@ def generate_workchain():
 
     return _generate_workchain
 
-@pytest.fixture
-def generate_workchain_jdftx(generate_workchain, generate_inputs_jdftx, generate_calc_job_node):
-    """Generate an instance of a `JdftxBaseWorkChain`."""
 
-    def _generate_workchain_jdftx(exit_code=None, inputs=None, return_inputs=False):
+@pytest.fixture
+def generate_workchain_jdftx(generate_workchain, generate_inputs_jdftx,
+                             generate_calc_job_node):
+    """Generate an instance of a `JdftxBaseWorkChain`."""
+    def _generate_workchain_jdftx(exit_code=None,
+                                  inputs=None,
+                                  return_inputs=False):
         from plumpy import ProcessState
         from aiida.orm import Dict
 

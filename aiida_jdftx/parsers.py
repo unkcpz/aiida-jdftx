@@ -4,6 +4,7 @@ Parsers provided by aiida_jdftx.
 
 Register parsers via the "aiida.parsers" entry point in setup.json.
 """
+#pylint: disable=too-many-nested-blocks, too-many-branches
 import numpy as np
 
 from aiida import orm
@@ -76,7 +77,8 @@ class JdftxParser(Parser):
             return self.exit_code_stdout
         return None
 
-    def build_output_trajectory(self, parsed_trajectory, structure):
+    @staticmethod
+    def build_output_trajectory(parsed_trajectory, structure):
         """doc"""
         try:
             cells = np.array(parsed_trajectory.pop('lattice_relax'))
@@ -256,7 +258,7 @@ class JdftxParser(Parser):
 
             if 'Done!' in line:
                 calc_success = True
-                
+
         # parsing the all initial parameters
 
         # clip the std-out to a list of every relax step
@@ -278,7 +280,7 @@ class JdftxParser(Parser):
                         # exit loop
                         if not line2.strip():
                             break
-                        
+
                         for string, key in [
                             ['Eewald', 'energy_ewald'],
                             ['EH', 'energy_hartree'],
@@ -293,7 +295,6 @@ class JdftxParser(Parser):
                                 value = grep_energy_from_line(line2)
                                 trajectory_data.setdefault(key,
                                                            []).append(value)
-
 
                 if '# Lattice vectors:' in line:
                     a1 = [float(s) for s in data_step[count + 2].split()[1:4]]
@@ -312,10 +313,9 @@ class JdftxParser(Parser):
                         # exit loop
                         if not line2.strip():
                             break
-                        
+
                         positions.append(
                             [float(i) for i in line2.split()[2:5]])
-
 
             # at each frame the positions is fractional, transform to angstrom
             if do_relax:

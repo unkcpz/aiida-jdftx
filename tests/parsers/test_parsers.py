@@ -65,7 +65,8 @@ def test_pw_default(fixture_localhost, generate_calc_job_node, generate_parser,
     })
 
 
-def test_pw_relax(fixture_localhost, generate_calc_job_node, generate_parser, generate_inputs, data_regression):
+def test_pw_relax(fixture_localhost, generate_calc_job_node, generate_parser,
+                  generate_inputs, data_regression):
     """Test a `jdftx` calculation in `relax` mode (include lattice or ion relax only).
     The output is created by running a simple lattice variable relax calculation.
     """
@@ -73,8 +74,12 @@ def test_pw_relax(fixture_localhost, generate_calc_job_node, generate_parser, ge
     entry_point_calc_job = 'jdftx'
     entry_point_parser = 'jdftx'
 
-    inputs = generate_inputs(parameters={'lattice-minimize': {'nIteration': 10}})
-    node =  generate_calc_job_node(entry_point_calc_job, fixture_localhost,name, inputs)
+    inputs = generate_inputs(
+        parameters={'lattice-minimize': {
+            'nIteration': 10
+        }})
+    node = generate_calc_job_node(entry_point_calc_job, fixture_localhost,
+                                  name, inputs)
     parser = generate_parser(entry_point_parser)
     results, calculation = parser.parse_from_node(node, store_provenance=False)
 

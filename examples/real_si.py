@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 
 def generate_structure(structure_id='silicon'):
     """Return a `StructureData` representing bulk silicon or a snapshot of a single water molecule dynamics."""
@@ -8,33 +10,26 @@ def generate_structure(structure_id='silicon'):
         cell = [[param / 2., param / 2., 0], [param / 2., 0, param / 2.],
                 [0, param / 2., param / 2.]]
         structure = StructureData(cell=cell)
-        structure.append_atom(position=(0., 0., 0.),
-                                symbols='Si',
-                                name='Si')
-        structure.append_atom(position=(param / 4., param / 4.,
-                                        param / 4.),
-                                symbols='Si',
-                                name='Si')
+        structure.append_atom(position=(0., 0., 0.), symbols='Si', name='Si')
+        structure.append_atom(position=(param / 4., param / 4., param / 4.),
+                              symbols='Si',
+                              name='Si')
     elif structure_id == 'water':
         structure = StructureData(
             cell=[[5.29177209, 0., 0.], [0., 5.29177209, 0.],
-                    [0., 0., 5.29177209]])
-        structure.append_atom(
-            position=[12.73464656, 16.7741411, 24.35076238],
-            symbols='H',
-            name='H')
-        structure.append_atom(
-            position=[-29.3865565, 9.51707929, -4.02515904],
-            symbols='H',
-            name='H')
-        structure.append_atom(
-            position=[1.04074437, -1.64320127, -1.27035021],
-            symbols='O',
-            name='O')
+                  [0., 0., 5.29177209]])
+        structure.append_atom(position=[12.73464656, 16.7741411, 24.35076238],
+                              symbols='H',
+                              name='H')
+        structure.append_atom(position=[-29.3865565, 9.51707929, -4.02515904],
+                              symbols='H',
+                              name='H')
+        structure.append_atom(position=[1.04074437, -1.64320127, -1.27035021],
+                              symbols='O',
+                              name='O')
     else:
         raise KeyError('Unknown structure_id=\'{}\''.format(structure_id))
     return structure
-
 
 
 if __name__ == '__main__':
@@ -48,7 +43,7 @@ if __name__ == '__main__':
     JdftxBaseWorkChain = WorkflowFactory('jdftx.base')
     pp_family = load_group('SSSP/1.1/PBE/efficiency')
     structure = generate_structure()
-    
+
     inputs = {
         'jdftx': {
             'code': load_code('jdftx@localhost'),

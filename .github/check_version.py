@@ -26,10 +26,8 @@ VERSION = aiida_jdftx.__version__
 
 if VERSION != setup_content['version']:
     print('Version number mismatch detected:')
-    print("Version number in '{}': {}".format(SETUP_FNAME,
-                                              setup_content['version']))
-    print("Version number in '{}/__init__.py': {}".format(
-        'aiida_jdftx', VERSION))
+    print(f"Version number in '{SETUP_FNAME}': {setup_content['version']}")
+    print(f"Version number in 'aiida_jdftx/__init__.py': {VERSION}")
     sys.exit(1)
 
 # Overwrite version in setup.json

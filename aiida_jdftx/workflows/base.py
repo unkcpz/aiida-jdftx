@@ -2,7 +2,7 @@
 """Workchain to run a JDFTx's jdftx calculation with automated error handling and restarts."""
 
 from aiida import orm
-from aiida.engine import BaseRestartWorkChain, if_, while_
+from aiida.engine import BaseRestartWorkChain, while_
 from aiida.plugins import CalculationFactory
 from aiida.common import AttributeDict
 from aiida.engine import calcfunction
@@ -11,7 +11,6 @@ JdftxCalculation = CalculationFactory('jdftx')
 
 # -*- coding: utf-8 -*-
 """Calculation function to compute a k-point mesh for a structure with a guaranteed minimum k-point distance."""
-
 
 
 @calcfunction
@@ -30,13 +29,16 @@ def create_kpoints_from_distance(structure, distance, force_parity):
 
     kpoints = KpointsData()
     kpoints.set_cell_from_structure(structure)
-    kpoints.set_kpoints_mesh_from_density(distance.value, force_parity=force_parity.value)
+    kpoints.set_kpoints_mesh_from_density(distance.value,
+                                          force_parity=force_parity.value)
 
     lengths_vector = [linalg.norm(vector) for vector in structure.cell]
     lengths_kpoint = kpoints.get_kpoints_mesh()[0]
 
-    is_symmetric_cell = all(abs(length - lengths_vector[0]) < epsilon for length in lengths_vector)
-    is_symmetric_mesh = all(length == lengths_kpoint[0] for length in lengths_kpoint)
+    is_symmetric_cell = all(
+        abs(length - lengths_vector[0]) < epsilon for length in lengths_vector)
+    is_symmetric_mesh = all(length == lengths_kpoint[0]
+                            for length in lengths_kpoint)
 
     # If the vectors of the cell all have the same length, the kpoint mesh should be isotropic as well
     if is_symmetric_cell and not is_symmetric_mesh:
@@ -100,7 +102,7 @@ class JdftxBaseWorkChain(BaseRestartWorkChain):
         `create_kpoints_from_distance` calculation function.
         """
         if all([key not in self.inputs for key in ['kpoints', 'kpoints_distance']]):
-            return self.exit_codes.ERROR_INVALID_INPUT_KPOINTS
+            return self.exit_codes.ERROR_INVALID_INPUT_KPOINTS # pylint: disable=no-member
 
         try:
             kpoints = self.inputs.kpoints
